@@ -11,7 +11,7 @@ load_dotenv()
 
 class Settings(metaclass=SingletonMeta):
     def __init__(self, **kwargs):
-        self.app_id = int(os.getenv("APP_ID"))
+        self.app_id = str(os.getenv("APP_ID"))
         self.install_id = int(os.getenv("INSTALL_ID"))
         self.private_key = os.getenv("PRIVATE_KEY_B64")
         self.problems_repo = os.getenv("PROBLEMS_REPO")
@@ -29,7 +29,7 @@ class Settings(metaclass=SingletonMeta):
                 with Path.open(event_path, "r") as f:
                     event = json.load(f)
                 self.pr_number = event.get("pull_request", {}).get("number")
-            except Exception as e:
+            except Exception as e:  # ruff: ignore[blind-except]
                 print(f"⚠️ Warning: Could not read event file ({event_path}): {e}")
         else:
             print("⚠️ No GITHUB_EVENT_PATH found — running in local/test mode.")
